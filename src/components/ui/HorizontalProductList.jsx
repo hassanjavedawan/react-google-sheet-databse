@@ -12,36 +12,35 @@ const Loader = () => (
 const HorizontalProductList = ({ title = 'Grab the best deal on Smartphones', viewAllLink = '#' }) => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const sheetId = "1y_-nubbcAmkjPvmroAQXcknSSE-trkFZmRr5NkZvXvo";
+    const sheetId = import.meta.env.VITE_SHEET_ID;
   
     const fetchData = async () => {
       try {
         const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json`;
         const res = await axios.get(url);
         const text = res.data;
-        
+    
         const json = JSON.parse(text.substring(47).slice(0, -2));
-        const headers = json.table.rows[0].c.map(cell => cell?.v);
-        const data = json.table.rows.slice(1).map(row => {
-            const obj = {};
-            row.c.forEach((cell, i) => {
-                obj[headers[i]] = cell?.v || "";
-            });
-  
-          // Clean and convert fields
-          const discountMatch = obj["discount"]?.match(/(\d+)%/);
-          const discount = discountMatch ? parseInt(discountMatch[1], 10) : 0;
-          const price = parseFloat(obj["oldPrice"]?.replace(/[$,]/g, "") || 0);
-  
+    
+        // Get headers correctly
+        const headers = json.table.cols.map(col => col.label);
+    
+        // Map rows to objects
+        const data = json.table.rows.map(row => {
+          const obj = {};
+          row.c.forEach((cell, i) => {
+            obj[headers[i]] = cell?.v || "";
+          });
+    
           return {
             image: obj["imageUrl"],
             title: obj["productName"],
-            description: `${obj["storage"]} - ${obj["color"]}`,
-            price,
-            discount,
+            description: `${obj["storage"]}GB - ${obj["color"]}`,
+            price: parseFloat(obj["currentPrice"] || 0),
+            discount: parseInt(obj["discount"], 10) || 0,
           };
         });
-  
+    
         setProducts(data);
         setLoading(false);
       } catch (err) {
@@ -49,6 +48,7 @@ const HorizontalProductList = ({ title = 'Grab the best deal on Smartphones', vi
         setLoading(false);
       }
     };
+    
   
     useEffect(() => {
       fetchData();

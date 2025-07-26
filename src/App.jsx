@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.scss'
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -8,6 +8,7 @@ import Base from './Layouts/Base';
 import Aos from 'aos';
 import "aos/dist/aos.css";
 import Account from './Pages/Account';
+import ProductEditPage from './components/ui/ProductEditPage';
 
 function App() {
   useEffect(() => {
@@ -25,6 +26,7 @@ function App() {
         <Routes>
           <Route index path="/" element={<Home/>} />
           <Route path="/account" element={<Account/>} />
+          <Route path="/product/:id" element={<ProductEditPage />} />
           {/* <Route path="/*" element={<PageNotFound />}/> */}
         </Routes>
       </Base>

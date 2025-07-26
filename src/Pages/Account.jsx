@@ -14,6 +14,9 @@ const Account = () => {
   });
   const [imagePreview, setImagePreview] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  const sheetId = import.meta.env.VITE_POST_SHEET_ID;
 
   const handleChange = async (e) => {
     const { name, value, type, files } = e.target;
@@ -35,6 +38,8 @@ const Account = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
+    
     const data = {
       productName: form.productName,
       storage: form.storage,
@@ -44,10 +49,9 @@ const Account = () => {
       oldPrice: form.oldPrice,
       imageUrl: form.imageUrl,
     };
-    console.log(data);
     try {
       await fetch(
-        'https://script.google.com/macros/s/AKfycbwkOpnPHGT2Pig2ec1UDvBFWXSbAxCLrqvNoPY9yxel0j4tOJMtrzCv9I6AovSblSVF/exec',
+        `https://script.google.com/macros/s/${sheetId}/exec`,
         {
           method: 'POST',
           body: JSON.stringify(data),
@@ -71,6 +75,8 @@ const Account = () => {
     } catch (error) {
       console.error('Error:', error);
       alert('Failed to submit product.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -104,8 +110,8 @@ const Account = () => {
               className="mt-2 rounded-xl shadow-lg max-h-40 mx-auto border-2 border-cyan-200/60"
             />
           </div>
-          <button type="submit" disabled={uploading} className="w-full bg-gradient-to-r from-blue-600 to-cyan-400 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:from-cyan-400 hover:to-blue-600 transition-all duration-200 futuristic-btn text-lg tracking-wide">
-            {uploading ? 'Encoding...' : 'Submit Product'}
+          <button type="submit" disabled={uploading || submitting} className="w-full bg-gradient-to-r from-blue-600 to-cyan-400 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:from-cyan-400 hover:to-blue-600 transition-all duration-200 futuristic-btn text-lg tracking-wide">
+            {uploading ? 'Encoding...' : submitting ? 'Processing...' : 'Submit Product'}
           </button>
         </form>
       </div>

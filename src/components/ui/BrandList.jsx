@@ -1,24 +1,10 @@
 import { useEffect, useState } from "react";
 
-// const brands = [
-//   { name: 'Apple', image: '/assets/images/logo.svg' },
-//   { name: 'Samsung', image: '/assets/images/footer-logo.png' },
-//   { name: 'Realme', image: '/assets/images/logo.svg' },
-//   { name: 'Xiaomi', image: '/assets/images/footer-logo.png' },
-//   { name: 'OnePlus', image: '/assets/images/logo.svg' },
-//   { name: 'Sony', image: '/assets/images/footer-logo.png' },
-//   { name: 'LG', image: '/assets/images/logo.svg' },
-//   { name: 'Dell', image: '/assets/images/footer-logo.png' },
-//   { name: 'HP', image: '/assets/images/logo.svg' },
-// ];
-
-
 const BrandList = () => {
     const [brands, setBrands] = useState([]);
-    const sheetId = "1y_-nubbcAmkjPvmroAQXcknSSE-trkFZmRr5NkZvXvo";
-    const gid = "1817784871"; 
+    const sheetId = import.meta.env.VITE_SHEET_ID;
+    const gid = import.meta.env.VITE_GID; 
 
-    console.log(brands);
 
     useEffect(() => {
         const fetchData = async () => {

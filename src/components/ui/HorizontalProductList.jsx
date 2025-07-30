@@ -33,6 +33,7 @@ const HorizontalProductList = ({ title = 'Grab the best deal on Smartphones', vi
           });
     
           return {
+            admin: obj["admin"],
             image: obj["imageUrl"],
             title: obj["productName"],
             description: `${obj["storage"]}GB - ${obj["color"]}`,

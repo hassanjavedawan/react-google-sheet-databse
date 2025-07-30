@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const DEFAULT_IMAGE = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFOCPSI-OUeTL-UcZeBjErcMVXwy8rv7UT-Q&s';
 
@@ -15,6 +15,21 @@ const Account = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const username = localStorage.getItem('loggedInUser');
+
+  useEffect(() => {
+    // Check if user is logged in
+    const checkLogin = () => {
+      const loggedInUser = localStorage.getItem('loggedInUser');
+      setIsLoggedIn(!!loggedInUser);
+    };
+    checkLogin();
+    window.addEventListener('authChange', checkLogin);
+    return () => window.removeEventListener('authChange', checkLogin);
+    
+  }, []);
 
   const sheetId = import.meta.env.VITE_POST_SHEET_ID;
 
@@ -40,7 +55,9 @@ const Account = () => {
     e.preventDefault();
     setSubmitting(true);
     
+    
     const data = {
+      admin: username, 
       productName: form.productName,
       storage: form.storage,
       color: form.color,
@@ -49,9 +66,10 @@ const Account = () => {
       oldPrice: form.oldPrice,
       imageUrl: form.imageUrl,
     };
+    console.log(data);
     try {
       await fetch(
-        `https://script.google.com/macros/s/${sheetId}/exec`,
+          `https://script.google.com/macros/s/${sheetId}/exec`,
         {
           method: 'POST',
           body: JSON.stringify(data),
@@ -79,6 +97,17 @@ const Account = () => {
       setSubmitting(false);
     }
   };
+
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-[70vh] flex flex-col items-center justify-center bg-gradient-to-br from-cyan-100/40 via-white/60 to-purple-100/40 py-12 px-2">
+        <div className="w-full max-w-xl bg-white/30 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-cyan-200/40 futuristic-card text-center">
+          <h1 className="text-3xl font-extrabold text-blue-900 mb-8 futuristic-title drop-shadow-lg">Account</h1>
+          <p className="text-lg text-blue-800">You must be logged in to view this page. Please log in first.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center bg-gradient-to-br from-cyan-100/40 via-white/60 to-purple-100/40 py-12 px-2">

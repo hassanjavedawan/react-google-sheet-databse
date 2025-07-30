@@ -8,7 +8,12 @@ import Base from './Layouts/Base';
 import Aos from 'aos';
 import "aos/dist/aos.css";
 import Account from './Pages/Account';
-import ProductEditPage from './components/ui/ProductEditPage';
+import Login from './Pages/Login';
+import Signup from './Pages/Signup';
+import ProductDetail from './Pages/ProductDetail';
+import Cart from './Pages/Cart';
+import Admin from './Pages/Admin';
+import Contact from './Pages/Contact';
 
 function App() {
   useEffect(() => {
@@ -26,7 +31,12 @@ function App() {
         <Routes>
           <Route index path="/" element={<Home/>} />
           <Route path="/account" element={<Account/>} />
-          <Route path="/product/:id" element={<ProductEditPage />} />
+          <Route path="/contact" element={<Contact/>} />
+          <Route path="/login" element={<Login/>} />
+          <Route path="/signup" element={<Signup/>} />
+          <Route path="/product/:title" element={<ProductDetail/>} />
+          <Route path="/cart" element={<Cart/>} />
+          <Route path="/admin" element={<Admin/>} />
           {/* <Route path="/*" element={<PageNotFound />}/> */}
         </Routes>
       </Base>
